@@ -38,9 +38,9 @@ public class ShopCreationGUI implements Listener {
 	private ChatWaitingType waitingType;
 	private UUID waitingPlayerId;
 
-	private double defaultBuyPrice = Slabbo.getInstance().getConfig().getDouble("defaults.buyPrice", 0);
-	private double defaultSellPrice = Slabbo.getInstance().getConfig().getDouble("defaults.sellPrice", 0);
-	private int defaultQuantity = Slabbo.getInstance().getConfig().getInt("defaults.quantity", 0);
+	private final double defaultBuyPrice = Slabbo.getInstance().getConfig().getDouble("defaults.buyPrice", 0);
+	private final double defaultSellPrice = Slabbo.getInstance().getConfig().getDouble("defaults.sellPrice", 0);
+	private final int defaultQuantity = Slabbo.getInstance().getConfig().getInt("defaults.quantity", 0);
 
 	private double buyPrice = defaultBuyPrice;
 	private double sellPrice = defaultSellPrice;
@@ -192,28 +192,6 @@ public class ShopCreationGUI implements Listener {
 		clearShopInv();
 
 		inv.setItem(0, shopItem);
-
-		// Suggestion logic: only for new shop creation, not modification
-		if (!isModifying && shopItem != null) {
-			boolean useSuggestions = Slabbo.getInstance().getConfig().getBoolean("usePriceSuggestions", true);
-			if (useSuggestions) {
-				Material mat = shopItem.getType();
-				SuggestedValuesManager.SuggestedValue suggestion = Slabbo.getInstance().getSuggestedValuesManager().getSuggestion(mat);
-				if (suggestion != null) {
-					buyPrice = suggestion.buy;
-					sellPrice = suggestion.sell;
-					quantity = suggestion.quantity;
-				} else {
-					buyPrice = 0;
-					sellPrice = 0;
-					quantity = 0;
-				}
-			} else {
-				buyPrice = 0;
-				sellPrice = 0;
-				quantity = 0;
-			}
-		}
 
 		if (!disableShops) {
 			inv.setItem(1, GUIItems.getSellersNoteItem(sellersNote));
@@ -379,6 +357,27 @@ public class ShopCreationGUI implements Listener {
 		}
 
 		shopItem = clickedItem.clone();
+
+		// Suggestion logic: only for new shop creation, not modification
+		if (!isModifying) {
+			boolean useSuggestions = Slabbo.getInstance().getConfig().getBoolean("usePriceSuggestions", true);
+			SuggestedValuesManager.SuggestedValue suggestion = null;
+
+			if (useSuggestions) {
+				Material mat = shopItem.getType();
+				suggestion = Slabbo.getInstance().getSuggestedValuesManager().getSuggestion(mat);
+			}
+
+			if (suggestion != null) {
+				buyPrice = suggestion.buy;
+				sellPrice = suggestion.sell;
+				quantity = suggestion.quantity;
+			} else {
+				buyPrice = defaultBuyPrice;
+				sellPrice = defaultSellPrice;
+				quantity = defaultQuantity;
+			}
+		}
 
 		shopItem.setAmount(1);
 
