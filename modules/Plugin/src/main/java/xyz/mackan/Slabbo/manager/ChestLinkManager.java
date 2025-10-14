@@ -24,6 +24,10 @@ public class ChestLinkManager {
 
 	public ChestLinkManager(ShopManager shopManager) {
 		this.shopManager = shopManager;
+
+		this.shopManager.getAllShops().values().stream()
+				.filter(shop -> shop.linkedChestLocation != null && !shop.linkedChestLocation.isEmpty())
+				.forEach(shop -> links.put(shop.linkedChestLocation, shop));
 	}
 
 	public boolean hasPendingLink(Player p) {
