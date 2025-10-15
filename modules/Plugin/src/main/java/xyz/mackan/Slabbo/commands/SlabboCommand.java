@@ -1417,7 +1417,7 @@ public class SlabboCommand extends BaseCommand {
 		switch (result) {
 			case SUCCESS:
 				// Update config only after a successful migration
-				Slabbo.getInstance().getConfig().set("storage.type", target);
+				Slabbo.getInstance().getConfig().set("storageEngine", target);
 				Slabbo.getInstance().saveConfig();
 				sender.sendMessage(ChatColor.GREEN + LocaleManager.replaceSingleKey("migrate.success", "target", target));
 				break;

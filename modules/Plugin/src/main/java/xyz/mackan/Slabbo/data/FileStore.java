@@ -17,8 +17,6 @@ public class FileStore implements DataStore {
     @Nullable
     public Map<String, Shop> loadShops() {
         try {
-            Bukkit.getLogger().info("Loading shops from file...");
-
             File dataFile = new File(Slabbo.getDataPath(), "shops.yml");
             YamlConfiguration configFile = YamlConfiguration.loadConfiguration(dataFile);
 
@@ -35,9 +33,6 @@ public class FileStore implements DataStore {
                 }
             }
 
-
-            Bukkit.getLogger().info("Loaded shops from file...");
-
             return shopData;
         } catch (Exception e) {
             e.printStackTrace();
@@ -50,8 +45,6 @@ public class FileStore implements DataStore {
         Bukkit.getScheduler().runTaskAsynchronously(Slabbo.getInstance(), new Runnable() {
             @Override
             public void run () {
-                Bukkit.getLogger().info("Saving shops to file...");
-
                 File dataFile = new File(Slabbo.getDataPath(), "shops.yml");
 
                 FileConfiguration configFile = YamlConfiguration.loadConfiguration(dataFile);
